@@ -15,7 +15,7 @@ class TodoListview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(bottom: 6, top: 16, right: 8, left: 8),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -37,8 +37,7 @@ class TodoListview extends StatelessWidget {
                 fontSize: 18,
                 decoration: tick ? TextDecoration.lineThrough : TextDecoration.none,
                 decorationColor: Colors.white,
-                decorationThickness: 2),
-                
+                decorationThickness: 2),               
             ),
           ],
         ),
