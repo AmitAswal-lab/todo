@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo/todo_listview.dart';
 
 class HomePage extends StatefulWidget {
-
   const HomePage({super.key});
-
-  
 
   @override
   State<HomePage> createState() {
@@ -13,20 +10,29 @@ class HomePage extends StatefulWidget {
   }
 }
 
-class _HomePageState extends State<HomePage>{
-
+class _HomePageState extends State<HomePage> {
   final List todoList = [
     ["Morning run", false],
     ["Quit coffee", false],
-    ["master keys in Flutter", false]
   ];
 
-  void checkboxChanged(int index){
+  final _textController = TextEditingController();
+
+  void checkboxChanged(int index) {
     setState(() {
       todoList[index][1] = !todoList[index][1];
     });
   }
-  
+
+  void addTodoItem() {
+    if (_textController.text.trim().isEmpty) return;
+
+    setState(() {
+      todoList.add([_textController.text, false]);
+      _textController.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,12 +44,89 @@ class _HomePageState extends State<HomePage>{
       ),
       body: ListView.builder(
         itemCount: todoList.length,
-        itemBuilder: (BuildContext context, index){
-          return TodoListview(
-            listItemName: todoList[index][0],
-            tick: todoList[index][1],
-            ontapCheckBox: (value) => checkboxChanged(index));
-      }),
+        itemBuilder: (BuildContext context, index) {
+          return Dismissible(
+            key: Key(todoList[index][0]), // A unique key
+            onDismissed: (direction) {
+              final removedItem = todoList[index];
+              final removedIndex = index;
+              setState(() {
+                todoList.removeAt(index);
+              });
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Todo deleted'),
+                  action: SnackBarAction(
+                    label: 'Undo',
+                    textColor: Colors.yellow,
+                    onPressed: () {
+                      setState(() {
+                        todoList.insert(removedIndex, removedItem);
+                      });
+                    },
+                  ),
+                  duration: Duration(seconds: 3),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            },
+            background: Container(
+              margin: const EdgeInsets.only(
+                bottom: 6,
+                top: 16,
+                right: 8,
+                left: 8,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.deepPurple.shade400,
+                borderRadius: BorderRadius.circular(25),
+              ),
+            ),
+
+            child: TodoListview(
+              listItemName: todoList[index][0],
+              tick: todoList[index][1],
+              ontapCheckBox: (value) => checkboxChanged(index),
+            ),
+          );
+        },
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 25),
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10, left: 25),
+                child: TextField(
+                  controller: _textController,
+                  decoration: InputDecoration(
+                    hint: Text(
+                      'Add new todo items',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    filled: true,
+                    fillColor: Colors.deepPurple.shade200,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.deepPurple),
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.deepPurple),
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            FloatingActionButton(
+              onPressed: addTodoItem,
+              child: Icon(Icons.add),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
