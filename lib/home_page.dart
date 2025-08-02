@@ -20,6 +20,13 @@ class _HomePageState extends State<HomePage>{
     ["Quit coffee", false],
     ["master keys in Flutter", false]
   ];
+
+  void checkboxChanged(int index){
+    setState(() {
+      todoList[index][1] = !todoList[index][1];
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +39,10 @@ class _HomePageState extends State<HomePage>{
       body: ListView.builder(
         itemCount: todoList.length,
         itemBuilder: (BuildContext context, index){
-          return TodoListview(listItemName: todoList[index][0]);
+          return TodoListview(
+            listItemName: todoList[index][0],
+            tick: todoList[index][1],
+            ontapCheckBox: (value) => checkboxChanged(index));
       }),
     );
   }
