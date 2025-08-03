@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todo/todo.dart';
 
-void main(){
-  runApp(
-    MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Flutter todo app'),
-        ),
-      ),
-    ),
-  );
+void main() {
+  runApp(Todo());
 }
