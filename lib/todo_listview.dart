@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:todo/models/todo_model.dart';
 
 class TodoListview extends StatelessWidget {
   const TodoListview({
     super.key,
-    required this.listItemName,
-    required this.tick,
+    required this.todoItem,
     required this.ontapCheckBox,
   });
 
-  final String listItemName;
-  final bool tick;
+  final TodoModel todoItem;
   final Function(bool?)? ontapCheckBox;
 
   @override
@@ -25,17 +24,17 @@ class TodoListview extends StatelessWidget {
         child: Row(
           children: [
             Checkbox(
-              value: tick, 
+              value: todoItem.tick, 
               onChanged: ontapCheckBox,
               side: BorderSide(color: Colors.white),
               checkColor: Colors.black,
               activeColor: Colors.white,),
             Text(
-              listItemName,
+              todoItem.todo,
               style: TextStyle(
                 color: Colors.white, 
                 fontSize: 18,
-                decoration: tick ? TextDecoration.lineThrough : TextDecoration.none,
+                decoration: todoItem.tick ? TextDecoration.lineThrough : TextDecoration.none,
                 decorationColor: Colors.white,
                 decorationThickness: 2),               
             ),

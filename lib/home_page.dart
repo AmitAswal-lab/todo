@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo/models/todo_model.dart';
 import 'package:todo/todo_listview.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,16 +12,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List todoList = [
-    ["Morning run", false],
-    ["Quit coffee", false],
+  final List<TodoModel> todoList = [
+    TodoModel(todo: 'Morning run', tick: false),
+
+    TodoModel(todo: 'Morning run', tick: false),
   ];
 
   final _textController = TextEditingController();
 
   void checkboxChanged(int index) {
     setState(() {
-      todoList[index][1] = !todoList[index][1];
+      final current = todoList[index];
+      todoList[index] = TodoModel(todo: current.todo, tick: !current.tick);
     });
   }
 
@@ -28,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     if (_textController.text.trim().isEmpty) return;
 
     setState(() {
-      todoList.add([_textController.text, false]);
+      todoList.add(TodoModel(todo: _textController.text.trim(), tick: false));
       _textController.clear();
     });
   }
@@ -46,7 +49,7 @@ class _HomePageState extends State<HomePage> {
         itemCount: todoList.length,
         itemBuilder: (BuildContext context, index) {
           return Dismissible(
-            key: Key(todoList[index][0]), // A unique key
+            key: Key(todoList[index].todo), // A unique key
             onDismissed: (direction) {
               final removedItem = todoList[index];
               final removedIndex = index;
@@ -85,8 +88,7 @@ class _HomePageState extends State<HomePage> {
             ),
 
             child: TodoListview(
-              listItemName: todoList[index][0],
-              tick: todoList[index][1],
+              todoItem: todoList[index],
               ontapCheckBox: (value) => checkboxChanged(index),
             ),
           );
